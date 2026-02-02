@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% load static %}
+{% load tailwind_filters %}
+{% block nav %}
+    <nav class="bg-white shadow-lg border-b border-gray-100 sticky top-0 mt-0 z-50 desktop-view">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center space-x-3 group">
+                        <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition duration-300">
+                            <img src="{% static 'images/fitblog-logo.png' %}" alt="FitBlit" class="w-6 h-6">
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">FitBlit</h1>
+                            <p class="text-xs text-gray-500 -mt-1">Dashboard</p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <div class="flex items-center space-x-8">
+                    <a href="{% url 'news-page' %}" class="flex items-center space-x-2 text-gray-700 hover:text-teal-600 font-medium transition duration-300 group">
+                        <i class="fa-regular fa-newspaper text-lg group-hover:scale-110 transition duration-300"></i>
+                        <span>News</span>
+                    </a>
+                    <a href="{% url 'business-page' %}" class="flex items-center space-x-2 text-gray-700 hover:text-teal-600 font-medium transition duration-300 group">
+                        <i class="fa-solid fa-cart-shopping text-lg group-hover:scale-110 transition duration-300"></i>
+                        <span>Marketplace</span>
+                    </a>
+                    <a href="{% url 'music-page' %}" class="flex items-center space-x-2 text-gray-700 hover:text-teal-600 font-medium transition duration-300 group">
+                        <i class="fa-solid fa-music text-lg group-hover:scale-110 transition duration-300"></i>
+                        <span>Music</span>
+                    </a>
+                </div>
+
+                <!-- User Menu and Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Create Post Button -->
+                    <button data-modal-target="post-modal" data-modal-toggle="post-modal" id="postBtn" 
+                            class="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-4 py-2 rounded-xl font-semibold hover:from-teal-600 hover:to-teal-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center space-x-2">
+                        <i class="fa-solid fa-plus text-sm"></i>
+                        <span>Create Post</span>
+                    </button>
+
+                    <!-- User Dropdown -->
+                    {% if user.is_authenticated %}
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 transition duration-300">
+                                <div class="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                    {{ user.username|first|upper }}
+                                </div>
+                                <i class="fa-solid fa-chevron-down text-gray-500 text-xs"></i>
+                            </button>
+                            
+                            <div x-show="open" @click.away="open = false" 
+                                 class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                                <!-- User Info -->
+                                <div class="px-4 py-3 border-b border-gray-100">
+                                    <div class="flex items-center space-x-3">
+                                        {% if user.profilemodel.image %}
+                                            <img src="{{ user.profilemodel.image.url }}" alt="Profile" class="w-10 h-10 rounded-full object-cover">
+                                        {% else %}
+                                            <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center">
+                                                <i class="fa-solid fa-user text-white"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <p class="font-semibold text-gray-900">{{ user.profilemodel.full_name|default:user.username }}</p>
+                                            <p class="text-sm text-gray-500">@{{ user.username }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Menu Items -->
+                                <div class="py-2">
+                                    <a href="{% url 'profile' %}" class="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition duration-300">
+                                        <i class="fa-solid fa-user-gear text-gray-500"></i>
+                                        <span>Manage Account</span>
+                                    </a>
+                                    <a href="{% url 'user-dashboard' %}" class="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition duration-300">
+                                        <i class="fa-solid fa-chart-line text-gray-500"></i>
+                                        <span>Dashboard</span>
+                                    </a>
+                                    {% if user.is_staff %}
+                                    <a href="{% url 'admin:index' %}" class="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition duration-300">
+                                        <i class="fa-solid fa-gears text-gray-500"></i>
+                                        <span>Admin Panel</span>
+                                    </a>
+                                    {% endif %}
+                                    <div class="border-t border-gray-100 my-2"></div>
+                                    <a href="{% url 'logout' %}" class="flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 transition duration-300">
+                                        <i class="fa-solid fa-sign-out-alt"></i>
+                                        <span>Sign Out</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Dashboard Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50 md:hidden">
+        <div class="px-4 py-4">
+            <div class="flex justify-between items-center h-14">
+                <!-- Mobile Logo -->
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg flex items-center justify-center">
+                            <img src="{% static 'images/fitblog-logo.png' %}" alt="FitBlit" class="w-5 h-5">
+                        </div>
+                        <span class="text-lg font-bold text-gray-900">FitBlit</span>
+                    </a>
+                </div>
+
+                <!-- Mobile Actions -->
+                <div class="flex items-center space-x-3">
+                    <!-- Create Post Button -->
+                    <button data-modal-target="post-modal" data-modal-toggle="post-modal" id="postBtn" 
+                            class="bg-gradient-to-r from-teal-500 to-teal-600 text-white px-3 py-2 rounded-lg font-semibold text-sm hover:from-teal-600 hover:to-teal-700 transition duration-300 shadow-lg hover:shadow-xl flex items-center space-x-1">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span class="hidden sm:inline">Post</span>
+                    </button>
+
+                    <!-- User Menu for Mobile -->
+                    {% if user.is_authenticated %}
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center p-2 rounded-lg hover:bg-gray-50 transition duration-300">
+                                <div class="w-7 h-7 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold text-xs">
+                                    {{ user.username|first|upper }}
+                                </div>
+                            </button>
+                            
+                            <div x-show="open" @click.away="open = false" 
+                                 class="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
+                                <div class="px-4 py-3 border-b border-gray-100">
+                                    <div class="flex items-center space-x-3">
+                                        {% if user.profilemodel.image %}
+                                            <img src="{{ user.profilemodel.image.url }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                                        {% else %}
+                                            <div class="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center">
+                                                <i class="fa-solid fa-user text-white text-sm"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <p class="font-semibold text-gray-900 text-sm">{{ user.profilemodel.full_name|default:user.username }}</p>
+                                            <p class="text-xs text-gray-500">@{{ user.username }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="py-2">
+                                    <a href="{% url 'profile' %}" class="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition duration-300">
+                                        <i class="fa-solid fa-user-gear text-gray-500 text-sm"></i>
+                                        <span class="text-sm">Profile</span>
+                                    </a>
+                                    <a href="{% url 'user-dashboard' %}" class="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition duration-300">
+                                        <i class="fa-solid fa-chart-line text-gray-500 text-sm"></i>
+                                        <span class="text-sm">Dashboard</span>
+                                    </a>
+                                    <div class="border-t border-gray-100 my-2"></div>
+                                    <a href="{% url 'logout' %}" class="flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 transition duration-300">
+                                        <i class="fa-solid fa-sign-out-alt text-sm"></i>
+                                        <span class="text-sm">Sign Out</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-gray-700 hover:text-teal-600 font-medium text-sm transition duration-300">
+                            Sign In
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation for Dashboard -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden">
+        <div class="flex justify-around items-center h-16 px-2">
+            <!-- Home -->
+            <a href="{% url 'home' %}" class="flex flex-col items-center justify-center flex-1 py-2 transition duration-300 {% if request.resolver_match.url_name == 'home' %}text-teal-600{% else %}text-gray-500 hover:text-teal-600{% endif %}">
+                <i class="fa-solid fa-home text-xl mb-1"></i>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+
+            <!-- News -->
+            <a href="{% url 'news-page' %}" class="flex flex-col items-center justify-center flex-1 py-2 transition duration-300 {% if request.resolver_match.url_name == 'news-page' %}text-teal-600{% else %}text-gray-500 hover:text-teal-600{% endif %}">
+                <i class="fa-regular fa-newspaper text-xl mb-1"></i>
+                <span class="text-xs font-medium">News</span>
+            </a>
+
+            <!-- Create Post -->
+            <button data-modal-target="post-modal" data-modal-toggle="post-modal" 
+                    class="flex flex-col items-center justify-center flex-1 py-2 transition duration-300 text-teal-600 hover:text-teal-700">
+                <div class="w-12 h-12 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg mb-1">
+                    <i class="fa-solid fa-plus text-white text-lg"></i>
+                </div>
+                <span class="text-xs font-medium">Create</span>
+            </button>
+
+            <!-- Marketplace -->
+            <a href="{% url 'business-page' %}" class="flex flex-col items-center justify-center flex-1 py-2 transition duration-300 {% if request.resolver_match.url_name == 'business-page' %}text-teal-600{% else %}text-gray-500 hover:text-teal-600{% endif %}">
+                <i class="fa-solid fa-cart-shopping text-xl mb-1"></i>
+                <span class="text-xs font-medium">Store</span>
+            </a>
+
+            <!-- Dashboard -->
+            <a href="{% url 'user-dashboard' %}" class="flex flex-col items-center justify-center flex-1 py-2 transition duration-300 {% if request.resolver_match.url_name == 'user-dashboard' %}text-teal-600{% else %}text-gray-500 hover:text-teal-600{% endif %}">
+                <i class="fa-solid fa-chart-line text-xl mb-1"></i>
+                <span class="text-xs font-medium">Dashboard</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Spacer for Mobile -->
+    <div class="h-16 md:hidden"></div>
+
+    <!-- Alpine.js for dropdown functionality -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+    <style>
+        @media (max-width: 768px) {
+            .desktop-view {
+                display: none;
+            }
+        }
+    </style>
+{% endblock %}

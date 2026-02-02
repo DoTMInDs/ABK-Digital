@@ -1,0 +1,696 @@
+{% extends "base.html" %}
+{% load static %}
+{% load tailwind_filters %}
+{% block title %}{{ artist_uploads.artist }} - Artist{% endblock %}
+
+{% block content %}
+    {% include "partials/nav.html" %}
+
+    <!-- Artist Hero Section - Mobile Optimized -->
+    <div class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+            <!-- Breadcrumb Navigation - Simplified for Mobile -->
+            <div class="mb-6 md:mb-8">
+                <nav class="flex items-center space-x-2 text-sm" aria-label="Breadcrumb">
+                    <a href="{% url 'home' %}" class="text-slate-300 hover:text-white transition-colors whitespace-nowrap">
+                        <i class="fas fa-home mr-1"></i>
+                        Home
+                    </a>
+                    <span class="text-slate-400">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.32601 2.333C5.23878 2.4223 5.18994 2.54217 5.18994 2.667C5.18994 2.79183 5.23878 2.91171 5.32601 3.001L10.199 8L5.32601 12.998C5.23878 13.0873 5.18994 13.2072 5.18994 13.332C5.18994 13.4568 5.23878 13.5767 5.32601 13.666C5.3684 13.7095 5.41909 13.7442 5.47508 13.7678C5.53108 13.7914 5.59123 13.8036 5.65201 13.8036C5.71278 13.8036 5.77294 13.7914 5.82893 13.7678C5.88492 13.7442 5.93561 13.7095 5.97801 13.666L11.16 8.349C11.251 8.25563 11.302 8.13039 11.302 8C11.302 7.86961 11.251 7.74437 11.16 7.651L5.97801 2.334C5.93561 2.29046 5.88492 2.25585 5.82893 2.23222C5.77294 2.20859 5.71278 2.19641 5.65201 2.19641C5.59123 2.19641 5.53108 2.20859 5.47508 2.23222C5.41909 2.25585 5.3684 2.29046 5.32601 2.334V2.333Z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <a href="{% url 'music-page' %}" class="text-slate-300 hover:text-white transition-colors whitespace-nowrap">
+                        <i class="fas fa-music mr-1"></i>
+                        Music
+                    </a>
+                    <span class="text-slate-400">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5.32601 2.333C5.23878 2.4223 5.18994 2.54217 5.18994 2.667C5.18994 2.79183 5.23878 2.91171 5.32601 3.001L10.199 8L5.32601 12.998C5.23878 13.0873 5.18994 13.2072 5.18994 13.332C5.18994 13.4568 5.23878 13.5767 5.32601 13.666C5.3684 13.7095 5.41909 13.7442 5.47508 13.7678C5.53108 13.7914 5.59123 13.8036 5.65201 13.8036C5.71278 13.8036 5.77294 13.7914 5.82893 13.7678C5.88492 13.7442 5.93561 13.7095 5.97801 13.666L11.16 8.349C11.251 8.25563 11.302 8.13039 11.302 8C11.302 7.86961 11.251 7.74437 11.16 7.651L5.97801 2.334C5.93561 2.29046 5.88492 2.25585 5.82893 2.23222C5.77294 2.20859 5.71278 2.19641 5.65201 2.19641C5.59123 2.19641 5.53108 2.20859 5.47508 2.23222C5.41909 2.25585 5.3684 2.29046 5.32601 2.334V2.333Z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <span class="text-white font-medium truncate max-w-[120px] md:max-w-none">{{ artist_uploads.artist }}</span>
+                </nav>
+            </div>
+
+            <!-- Artist Info Section - Stacked on Mobile -->
+            <div class="flex flex-col items-center text-center lg:flex-row lg:items-start lg:text-left gap-6 md:gap-8">
+                <!-- Artist Image - Smaller on Mobile -->
+                <div class="relative group">
+                    <div class="relative w-32 h-32 sm:w-40 sm:h-40 md:w-56 md:h-56 lg:w-72 lg:h-72 rounded-2xl overflow-hidden shadow-2xl">
+                        {% if artist_uploads.artist_image %}
+                            <img src="{{ artist_uploads.artist_image.url }}" 
+                                 alt="{{ artist_uploads.artist }}" 
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                 loading="lazy">
+                        {% else %}
+                            <div class="w-full h-full bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+                                <i class="fas fa-user text-white text-4xl sm:text-5xl md:text-6xl"></i>
+                            </div>
+                        {% endif %}
+                        <!-- Verified Badge -->
+                        <div class="absolute top-3 right-3 bg-teal-500 text-white p-1.5 rounded-full shadow-lg sm:p-2">
+                            <i class="fas fa-check text-xs sm:text-sm"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Image Badge - Hidden on Mobile -->
+                    {% if artist_uploads.artist_profile %}
+                    <div class="hidden md:block absolute -bottom-4 -right-4 w-16 h-16 lg:w-20 lg:h-20 rounded-full border-4 border-slate-900 overflow-hidden shadow-xl">
+                        <img src="{{ artist_uploads.artist_profile.url }}" 
+                             alt="Profile" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Artist Details -->
+                <div class="flex-1 w-full">
+                    <!-- Genre Tag -->
+                    <div class="mb-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 text-sm font-medium">
+                            <i class="fas fa-compact-disc mr-1.5 text-xs"></i>
+                            {{ artist_uploads.artist_genre }}
+                        </span>
+                    </div>
+                    
+                    <!-- Artist Name -->
+                    <h1 class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 md:mb-4 break-words">
+                        {{ artist_uploads.artist }}
+                    </h1>
+                    
+                    <!-- Stats Row -->
+                    <div class="flex flex-wrap items-center justify-center gap-3 mb-5 md:mb-6 lg:justify-start">
+                        <div class="flex items-center text-slate-300 text-sm sm:text-base">
+                            <i class="fas fa-calendar-alt mr-2 text-xs sm:text-sm"></i>
+                            <span class="whitespace-nowrap">Joined {{ artist_uploads.posted_on|date:"F Y" }}</span>
+                        </div>
+                        <div class="flex items-center text-slate-300 text-sm sm:text-base">
+                            <i class="fas fa-music mr-2 text-xs sm:text-sm"></i>
+                            <span>{{ songs|length }} songs</span>
+                        </div>
+                        
+                        <!-- Add Song Button - Prominent on Mobile -->
+                        {% if artist_uploads.user == user %}
+                        <div class="w-full mt-3 md:w-auto md:ml-auto md:mt-0">
+                            <button data-modal-target="add-song-modal" data-modal-toggle="add-song-modal" 
+                                    class="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-500 text-white rounded-xl hover:bg-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95">
+                                <i class="fas fa-plus"></i>
+                                <span>Add Song</span>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Quick Actions - Horizontal Scroll on Mobile -->
+                    <div class="overflow-x-auto pb-2 md:overflow-visible">
+                        <div class="flex gap-2 min-w-max md:flex-wrap md:gap-3 md:min-w-0 md:justify-center lg:justify-start">
+                            <a href="{% url 'all-album' %}" 
+                               class="inline-flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-all active:scale-95 whitespace-nowrap">
+                                <i class="fas fa-record-vinyl text-sm"></i>
+                                <span class="text-sm">Albums</span>
+                            </a>
+                            <button class="inline-flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-all active:scale-95 whitespace-nowrap">
+                                <i class="fas fa-share-alt text-sm"></i>
+                                <span class="text-sm">Share</span>
+                            </button>
+                            <button class="inline-flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-all active:scale-95 whitespace-nowrap">
+                                <i class="fas fa-heart text-sm"></i>
+                                <span class="text-sm">Follow</span>
+                            </button>
+                            <!-- Mobile Only Actions -->
+                            <button class="md:hidden inline-flex items-center gap-2 px-3 py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-all active:scale-95 whitespace-nowrap">
+                                <i class="fas fa-play-circle text-sm"></i>
+                                <span class="text-sm">Play All</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Songs Section - Mobile Optimized -->
+    <div class="max-w-7xl mx-auto px-4 py-6 md:py-8 mb-12">
+        <!-- Section Header -->
+        <div class="mb-6 md:mb-8">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 sm:text-2xl md:text-3xl">Popular Songs</h2>
+                    <p class="text-gray-600 mt-1 text-sm md:text-base">Listen to tracks from {{ artist_uploads.artist }}</p>
+                </div>
+                <div class="flex items-center justify-between sm:justify-end gap-3">
+                    <span class="text-sm text-gray-500">{{ songs|length }} tracks</span>
+                    <div class="relative">
+                        <button class="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 active:scale-95">
+                            <i class="fas fa-sort"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Songs Grid - Single Column on Mobile -->
+        {% if songs %}
+            <div class="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-4 lg:gap-6 c">
+                {% for song in songs %}
+                <div class="group bg-white rounded-xl sm:rounded-2xl shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 active:scale-[0.98] md:active:scale-100">
+                    <!-- Song Cover with Play Button -->
+                    <div class="relative h-40 sm:h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+                        {% if song.cover_image %}
+                            <img src="{{ song.cover_image.url }}" 
+                                 alt="{{ song.title }}" 
+                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                 loading="lazy">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center">
+                                <div class="relative">
+                                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-music text-white text-xl sm:text-2xl"></i>
+                                    </div>
+                                    <div class="absolute -top-2 -right-2 w-6 h-6 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
+                                        <i class="fas fa-play text-teal-500 text-xs"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Play Button Overlay - Always visible on mobile -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent flex items-end justify-between p-3 sm:p-4">
+                            <button class="song-play-btn w-10 h-10 sm:w-12 sm:h-12 bg-teal-500 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-teal-600 transition-all active:scale-110"
+                                    data-song-url="{% if song.song_file %}{{ song.song_file.url }}{% endif %}"
+                                    data-song-title="{{ song.title }}"
+                                    data-song-artist="{{ song.artist }}">
+                                <i class="fas fa-play text-sm sm:text-base"></i>
+                            </button>
+                            {% if song.song_file %}
+                            <a href="{{ song.song_file.url }}" download 
+                               class="w-8 h-8 sm:w-10 sm:h-10 bg-white/90 text-gray-800 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-all active:scale-110">
+                                <i class="fas fa-download text-xs sm:text-sm"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Song Info -->
+                    <div class="p-4 sm:p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-bold text-gray-900 text-base sm:text-lg truncate">{{ song.title }}</h3>
+                                <p class="text-teal-600 text-sm font-medium mb-1">{{ song.genre|default:"Genre" }}</p>
+                                {% if song.album.title %}
+                                    <p class="text-gray-600 text-xs sm:text-sm truncate">{{ song.album.title }} • {{ song.album.release_date|date:"Y" }}</p>
+                                {% else %}
+                                    <p class="text-gray-600 text-xs sm:text-sm truncate">Single • {{ song.artist }}</p>
+                                {% endif %}
+                            </div>
+                            <button class="text-gray-400 hover:text-teal-500 transition-colors ml-2 flex-shrink-0">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                            <div class="flex items-center space-x-3">
+                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full whitespace-nowrap">
+                                    {{ song.duration|default:"3:45" }}
+                                </span>
+                                <span class="text-xs text-gray-500 whitespace-nowrap">
+                                    <i class="fas fa-headphones mr-1"></i>
+                                    {{ song.play_count|default:"0" }}
+                                </span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-gray-400 hover:text-red-500 transition-colors active:scale-110">
+                                    <i class="far fa-heart text-sm"></i>
+                                </button>
+                                <button class="text-gray-400 hover:text-teal-500 transition-colors active:scale-110">
+                                    <i class="far fa-plus-square text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-10 sm:py-12">
+                <div class="max-w-md mx-auto px-4">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-music text-gray-400 text-xl sm:text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2 sm:text-xl">No songs yet</h3>
+                    <p class="text-gray-500 text-sm sm:text-base mb-6">Be the first to add a song from this artist</p>
+                    {% if artist_uploads.user == user %}
+                    <button data-modal-target="add-song-modal" data-modal-toggle="add-song-modal" 
+                            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-teal-500 text-white rounded-xl hover:bg-teal-600 transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95">
+                        <i class="fas fa-plus"></i>
+                        <span>Add First Song</span>
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Add Song Modal - Mobile Optimized -->
+    <div id="add-song-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-3 sm:p-4 w-full max-w-2xl">
+            <div class="relative bg-white rounded-xl sm:rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
+                <!-- Modal Header -->
+                <div class="relative bg-gradient-to-r from-teal-600 to-teal-700 p-4 sm:p-6 rounded-t-xl sm:rounded-t-2xl flex justify-between items-center flex-shrink-0">
+                    <div class="flex items-center min-w-0">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-plus-circle text-white text-xl sm:text-2xl"></i>
+                        </div>
+                        <div class="ml-3 min-w-0">
+                            <h2 class="text-lg sm:text-xl font-bold text-white truncate">Add New Song</h2>
+                            <p class="text-teal-100 text-xs sm:text-sm truncate">Upload to {{ artist_uploads.artist }}'s collection</p>
+                        </div>
+                    </div>
+                    <button type="button" class="text-white bg-transparent hover:bg-white hover:text-teal-600 rounded-lg text-sm w-7 h-7 sm:w-8 sm:h-8 ms-2 flex-shrink-0 inline-flex justify-center items-center transition-all active:scale-95"
+                            data-modal-hide="add-song-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Form Content -->
+                <form action="" method="post" enctype="multipart/form-data" class="flex flex-col flex-grow bg-white">
+                    {% csrf_token %}
+                    <input type="hidden" name="song_form" value="true">
+                    
+                    <!-- Scrollable Form Content -->
+                    <div class="p-4 sm:p-6 overflow-y-auto flex-grow space-y-4 sm:space-y-6">
+                        <!-- Cover Image Preview -->
+                        <div class="text-center">
+                            <div class="relative inline-block">
+                                <div id="song-cover-preview" class="w-32 h-32 sm:w-40 sm:h-40 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 mx-auto mb-3 sm:mb-4 bg-gray-50">
+                                    <div id="default-preview" class="w-full h-full flex flex-col items-center justify-center text-gray-400 p-4">
+                                        <i class="fas fa-music text-2xl sm:text-3xl mb-1 sm:mb-2"></i>
+                                        <span class="text-xs sm:text-sm text-center">No cover selected</span>
+                                    </div>
+                                    <img id="song-cover-image" class="w-full h-full object-cover hidden" src="#" alt="Cover preview" />
+                                </div>
+                                <label for="id_cover_image" 
+                                    class="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 bg-teal-500 hover:bg-teal-600 text-white p-1.5 sm:p-2 rounded-full shadow-lg cursor-pointer transition-all duration-200 active:scale-110">
+                                    <i class="fas fa-camera text-xs sm:text-sm"></i>
+                                </label>
+                            </div>
+                            <p class="text-xs sm:text-sm text-gray-500">Tap camera to add cover</p>
+                        </div>
+
+                        <!-- Form Fields -->
+                        <div class="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2">
+                            <!-- Song Title -->
+                            <div class="sm:col-span-2">
+                                <label for="id_title" class="block mb-2 text-sm font-medium text-gray-900">Song Title</label>
+                                {% if 'title' in song_form.fields %}
+                                    {{ song_form.title|as_crispy_field }}
+                                {% else %}
+                                    <input type="text" name="title" id="id_title" 
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5" 
+                                        placeholder="Enter song title" required>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Genre -->
+                            <div>
+                                <label for="id_genre" class="block mb-2 text-sm font-medium text-gray-900">Genre</label>
+                                {% if 'genre' in song_form.fields %}
+                                    {{ song_form.genre|as_crispy_field }}
+                                {% else %}
+                                    <input type="text" name="genre" id="id_genre" 
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5" 
+                                        placeholder="Enter genre">
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Album -->
+                            <div>
+                                <label for="id_album" class="block mb-2 text-sm font-medium text-gray-900">Album (Optional)</label>
+                                {% if 'album' in song_form.fields %}
+                                    {{ song_form.album|as_crispy_field }}
+                                {% else %}
+                                    <select name="album" id="id_album" 
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5">
+                                        <option value="">Select album</option>
+                                        {% for album in artist_uploads.album_set.all %}
+                                            <option value="{{ album.id }}">{{ album.title|truncatechars:20 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Duration -->
+                            <div>
+                                <label for="id_duration" class="block mb-2 text-sm font-medium text-gray-900">Duration</label>
+                                {% if 'duration' in song_form.fields %}
+                                    {{ song_form.duration|as_crispy_field }}
+                                {% else %}
+                                    <input type="text" name="duration" id="id_duration" 
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-teal-500 focus:border-teal-500 block w-full p-2.5" 
+                                        placeholder="MM:SS">
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- File Uploads - Stacked on Mobile -->
+                        <div class="space-y-4 sm:space-y-6">
+                            <!-- Song File Upload -->
+                            <div>
+                                <label for="id_song_file" class="block mb-2 text-sm font-medium text-gray-900">Song File</label>
+                                <div class="flex items-center justify-center w-full">
+                                    <label for="id_song_file" class="flex flex-col items-center justify-center w-full h-28 sm:h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors active:bg-gray-200">
+                                        <div class="flex flex-col items-center justify-center p-4">
+                                            <i class="fas fa-cloud-upload-alt text-2xl sm:text-3xl text-gray-400 mb-1 sm:mb-2"></i>
+                                            <p class="mb-1 text-xs sm:text-sm text-gray-500 text-center"><span class="font-semibold">Tap to upload</span></p>
+                                            <p class="text-xs text-gray-500 text-center">MP3, WAV, FLAC</p>
+                                        </div>
+                                        <input type="file" name="song_file" id="id_song_file" class="hidden" accept="audio/*" required>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Cover Image Upload -->
+                            <div>
+                                <label for="id_cover_image" class="block mb-2 text-sm font-medium text-gray-900">Cover Image (Optional)</label>
+                                <div class="flex items-center justify-center w-full">
+                                    <label for="id_cover_image" class="flex flex-col items-center justify-center w-full h-28 sm:h-32 border-2 border-gray-300 border-dashed rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors active:bg-gray-200">
+                                        <div class="flex flex-col items-center justify-center p-4">
+                                            <i class="fas fa-image text-2xl sm:text-3xl text-gray-400 mb-1 sm:mb-2"></i>
+                                            <p class="mb-1 text-xs sm:text-sm text-gray-500 text-center"><span class="font-semibold">Tap to upload</span></p>
+                                            <p class="text-xs text-gray-500 text-center">PNG, JPG, JPEG</p>
+                                        </div>
+                                        <input type="file" name="cover_image" id="id_cover_image" class="hidden" accept="image/*">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Footer - Stacked on Mobile -->
+                    <div class="p-4 sm:p-6 bg-gray-50 rounded-b-xl sm:rounded-b-2xl flex-shrink-0">
+                        <div class="flex flex-col sm:flex-row gap-3 sm:space-x-3">
+                            <button type="submit" 
+                                    class="order-2 sm:order-1 w-full sm:flex-1 inline-flex items-center justify-center px-4 sm:px-6 py-3 bg-teal-600 text-white text-sm font-medium rounded-xl hover:bg-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95">
+                                <i class="fas fa-cloud-upload-alt mr-2 text-xs sm:text-sm"></i>
+                                Upload Song
+                            </button>
+                            <button type="button" 
+                                    class="order-1 sm:order-2 w-full sm:flex-1 inline-flex items-center justify-center px-4 sm:px-6 py-3 border border-gray-300 text-gray-700 text-sm font-medium rounded-xl hover:bg-gray-50 transition-all duration-200 active:scale-95"
+                                    data-modal-hide="add-song-modal">
+                                <i class="fas fa-times mr-2 text-xs sm:text-sm"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Player - Mobile Optimized -->
+    <div id="audio-player" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg transform translate-y-full transition-transform duration-300 z-50">
+        <div class="px-3 py-2.5 sm:px-4 sm:py-4">
+            <div class="flex items-center justify-between space-x-2 sm:space-x-4">
+                <!-- Song Info - Truncated on Mobile -->
+                <div id="current-song-info" class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gradient-to-br from-teal-100 to-teal-200 overflow-hidden flex-shrink-0">
+                        <img id="player-cover" class="w-full h-full object-cover" src="" alt="">
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h4 id="player-title" class="font-semibold text-gray-900 text-sm sm:text-base truncate"></h4>
+                        <p id="player-artist" class="text-xs sm:text-sm text-gray-600 truncate"></p>
+                    </div>
+                </div>
+
+                <!-- Audio Controls - Centered -->
+                <div class="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
+                    <button id="play-pause-btn" class="w-8 h-8 sm:w-10 sm:h-10 bg-teal-500 text-white rounded-full flex items-center justify-center hover:bg-teal-600 active:scale-95">
+                        <i class="fas fa-play text-xs sm:text-sm"></i>
+                    </button>
+                    
+                    <!-- Close Button on Mobile -->
+                    <button id="close-player" class="text-gray-400 hover:text-gray-600 sm:hidden">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    
+                    <!-- Volume Control - Hidden on Mobile -->
+                    <div class="hidden sm:flex sm:items-center sm:space-x-2">
+                        <i class="fas fa-volume-down text-gray-400 text-sm"></i>
+                        <input type="range" min="0" max="100" value="80" class="w-16 accent-teal-500">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar - Full Width -->
+            <div class="mt-2 sm:mt-3">
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <span id="current-time" class="text-xs text-gray-500 w-10 sm:w-12 text-right">0:00</span>
+                    <div class="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-teal-500 w-0"></div>
+                    </div>
+                    <span id="total-time" class="text-xs text-gray-500 w-10 sm:w-12">0:00</span>
+                </div>
+            </div>
+        </div>
+        <audio id="audio-element" preload="metadata"></audio>
+    </div>
+
+    {% include "partials/footer.html" %}
+
+    <!-- Mobile-First CSS -->
+    <style>
+        /* Improve touch targets */
+        button, 
+        a:not(.no-touch),
+        input[type="file"] + label {
+            min-height: 44px;
+            min-width: 44px;
+        }
+        
+        /* Mobile scroll improvements */
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .overflow-x-auto::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+        
+        /* Better text rendering on mobile */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Prevent zoom on input focus for iOS */
+        @media screen and (max-width: 768px) {
+            input, 
+            select, 
+            textarea {
+                font-size: 16px; /* Prevents iOS zoom */
+            }
+        }
+        
+        /* Modal backdrop for mobile */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Touch-optimized audio player
+            const audioPlayer = document.getElementById('audio-player');
+            const audioElement = document.getElementById('audio-element');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const currentTimeEl = document.getElementById('current-time');
+            const totalTimeEl = document.getElementById('total-time');
+            const closePlayerBtn = document.getElementById('close-player');
+            let isDragging = false;
+
+            // Song play buttons with touch feedback
+            document.querySelectorAll('.song-play-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const songUrl = this.getAttribute('data-song-url');
+                    const songTitle = this.getAttribute('data-song-title');
+                    const songArtist = this.getAttribute('data-song-artist');
+                    
+                    // Update player info
+                    document.getElementById('player-title').textContent = songTitle;
+                    document.getElementById('player-artist').textContent = songArtist;
+                    
+                    // Update audio source
+                    audioElement.src = songUrl;
+                    
+                    // Show and play with mobile-safe delay
+                    setTimeout(() => {
+                        audioPlayer.classList.remove('translate-y-full');
+                        audioPlayer.classList.add('translate-y-0');
+                        
+                        // Play the audio
+                        audioElement.play().then(() => {
+                            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        }).catch(e => {
+                            console.log('Autoplay prevented:', e);
+                        });
+                    }, 100);
+                });
+            });
+
+            // Play/Pause with touch feedback
+            playPauseBtn.addEventListener('click', function() {
+                if (audioElement.paused) {
+                    audioElement.play();
+                    this.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    audioElement.pause();
+                    this.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            });
+
+            // Update progress bar
+            audioElement.addEventListener('timeupdate', function() {
+                if (!isDragging) {
+                    const currentTime = audioElement.currentTime;
+                    const duration = audioElement.duration;
+                    
+                    if (duration) {
+                        const progressPercent = (currentTime / duration) * 100;
+                        progressBar.style.width = `${progressPercent}%`;
+                        
+                        // Update time displays
+                        currentTimeEl.textContent = formatTime(currentTime);
+                        totalTimeEl.textContent = formatTime(duration);
+                    }
+                }
+            });
+
+            // Touch-friendly seek functionality
+            progressBar.parentElement.addEventListener('touchstart', startSeek);
+            progressBar.parentElement.addEventListener('mousedown', startSeek);
+
+            function startSeek(e) {
+                isDragging = true;
+                const rect = this.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                updateSeek(clientX, rect);
+                
+                const moveHandler = (moveEvent) => {
+                    const clientX = moveEvent.touches ? moveEvent.touches[0].clientX : moveEvent.clientX;
+                    updateSeek(clientX, rect);
+                };
+                
+                const endHandler = () => {
+                    isDragging = false;
+                    document.removeEventListener('touchmove', moveHandler);
+                    document.removeEventListener('mousemove', moveHandler);
+                    document.removeEventListener('touchend', endHandler);
+                    document.removeEventListener('mouseup', endHandler);
+                };
+                
+                document.addEventListener('touchmove', moveHandler);
+                document.addEventListener('mousemove', moveHandler);
+                document.addEventListener('touchend', endHandler);
+                document.addEventListener('mouseup', endHandler);
+            }
+
+            function updateSeek(clientX, rect) {
+                const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                if (audioElement.duration) {
+                    audioElement.currentTime = percent * audioElement.duration;
+                    progressBar.style.width = `${percent * 100}%`;
+                    currentTimeEl.textContent = formatTime(audioElement.currentTime);
+                }
+            }
+
+            // Close player
+            closePlayerBtn.addEventListener('click', function() {
+                audioElement.pause();
+                audioPlayer.classList.remove('translate-y-0');
+                audioPlayer.classList.add('translate-y-full');
+            });
+
+            // Close player when tapping outside on mobile
+            document.addEventListener('touchstart', function(e) {
+                if (audioPlayer.classList.contains('translate-y-0') && 
+                    !audioPlayer.contains(e.target) && 
+                    !e.target.closest('.song-play-btn')) {
+                    // Only close if tapping far from player
+                    const playerRect = audioPlayer.getBoundingClientRect();
+                    if (e.touches[0].clientY < playerRect.top - 50) {
+                        audioElement.pause();
+                        audioPlayer.classList.remove('translate-y-0');
+                        audioPlayer.classList.add('translate-y-full');
+                    }
+                }
+            });
+
+            // Format time helper
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            // Image preview for modal
+            const coverImageInput = document.getElementById('id_cover_image');
+            const coverPreview = document.getElementById('song-cover-image');
+            const defaultPreview = document.getElementById('default-preview');
+
+            if (coverImageInput) {
+                coverImageInput.addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            coverPreview.src = e.target.result;
+                            coverPreview.classList.remove('hidden');
+                            defaultPreview.classList.add('hidden');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Mobile modal improvements
+            const modal = document.getElementById('add-song-modal');
+            if (modal) {
+                modal.addEventListener('touchmove', function(e) {
+                    e.stopPropagation();
+                }, { passive: false });
+            }
+
+            // Close modal on escape or outside tap
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('[data-modal-hide]').forEach(btn => {
+                        btn.click();
+                    });
+                }
+            });
+
+            // Prevent body scroll when modal is open
+            const modalButtons = document.querySelectorAll('[data-modal-toggle]');
+            modalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            const closeButtons = document.querySelectorAll('[data-modal-hide]');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    document.body.style.overflow = '';
+                });
+            });
+        });
+    </script>
+{% endblock %}
