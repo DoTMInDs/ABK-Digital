@@ -1,11 +1,11 @@
 #!/bin/bash
 set -o errexit
 
-python manage.py collectstatic --no-input
-python manage.py migrate
+python mysite/manage.py collectstatic --no-input
+python mysite/manage.py migrate
 
 if [ "$DJANGO_CREATEUSER" == "1" ]; then 
-    python manage.py createsuperuser --noinput
+    python mysite/manage.py createsuperuser --noinput
 fi
 
-python manage.py runserver 0.0.0.0:$PORT
+python mysite/manage.py runserver 0.0.0.0:$PORT
